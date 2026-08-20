@@ -1,0 +1,55 @@
+:root {
+  --ink: #17252a;
+  --muted: #5c6b6b;
+  --bg: #f4f6f5;
+  --surface: #ffffff;
+  --line: #e3e8e6;
+  --accent: #0d7d6e;
+  --accent-soft: #e6f2ef;
+  --ccpl-green-1: #d5d900;
+  --ccpl-green-2: #3fa535;
+  --ccpl-green-3: #00765b;
+  --ccpl-turquoise: #007e95;
+  --ccpl-orange: #ef7918;
+  --ccpl-brown: #7d6d6f;
+
+  color: var(--ink);
+  background: var(--bg);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+@font-face {
+  font-family: 'Chewy';
+  src: url('@/assets/fonts/Chewy/Chewy-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --font-titre: 'Chewy', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+input, select {
+  font: inherit;
+  color: inherit;
+}
+
+/* accessibilité : focus toujours visible */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
