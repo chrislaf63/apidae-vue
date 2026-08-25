@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted} from 'vue'
+import {computed, onMounted} from 'vue'
 import {storeToRefs} from 'pinia'
 import {useApidaeStore} from '@/stores/apidae.js'
 
@@ -9,15 +9,34 @@ const store = useApidaeStore()
 
 // storeToRefs garde la réactivité quand on "déstructure" le state/getters.
 // Les actions, elles, se prennent directement sur `store` (voir plus bas).
-const {filtered, numFound, loading, error, fromCache, search, from, to, searchCommune} =
+const {filtered, numFound, loading, error, fromCache, search, from, to, searchCommune, objets} =
     storeToRefs(store)
 
-onMounted(() => store.fetchObjets())
+onMounted(async () => {
+  await store.fetchObjets()
+})
 
 // petit helper : la commune peut manquer selon les fiches
 const commune = (o) => o.localisation?.adresse?.commune?.nom ?? '—'
 
 
+
+// computed : recalculé tout seul dès que `objets` est rempli par fetchObjets().
+// Renvoie [{ nom: 'Ambert', count: 3 }, …] trié par nom.
+const communes = computed(() => {
+  const counted = objets.value.reduce((acc, o) => {
+    const nom = o.localisation?.adresse?.commune?.nom
+    if (!nom) return acc            // on ignore les fiches sans commune
+    acc[nom] = (acc[nom] || 0) + 1
+    return acc
+  }, {})
+
+  return Object.entries(counted)
+      .map(([nom, count]) => ({nom, count}))
+      .sort((a, b) => a.nom.localeCompare(b.nom))
+})
+const sendCommune = (com) => searchCommune.value = com
+console.log(communes)
 </script>
 
 <template>
@@ -53,12 +72,13 @@ const commune = (o) => o.localisation?.adresse?.commune?.nom ?? '—'
       <hr/>
       <div class="byTown">
         <p>Par commune</p>
-        <input
-            v-model="searchCommune"
-            type="search"
-            id="searchCommune"
-            placeholder="Rechercher une commune"
-        >
+
+        <select v-model="searchCommune">
+          <option value="" selected>Toutes ({{ numFound }})</option>
+          <option v-for="c in communes"
+                  :key="c.nom"
+                  @click="sendCommune(c.nom)">{{ c.nom }} ({{ c.count }})</option>
+        </select>
       </div>
 
       <hr/>
@@ -206,14 +226,16 @@ h2 {
   width: 25%;
 }
 
-.controls input {
+.controls input,
+select {
   border: 1px solid var(--line);
   background: var(--surface);
   padding: 0.5rem 0.75rem;
   border-radius: 8px;
 }
 
-.controls input {
+.controls input,
+select {
   flex: 1 1 240px;
 }
 
@@ -248,7 +270,8 @@ h2 {
 
 .byTown input,
 .byDate input,
-.byEventType input {
+.byEventType input,
+select {
   width: 90%;
   margin-left: 5%;
 }
