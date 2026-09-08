@@ -36,7 +36,6 @@ const communes = computed(() => {
       .sort((a, b) => a.nom.localeCompare(b.nom))
 })
 const sendCommune = (com) => searchCommune.value = com
-console.log(communes)
 </script>
 
 <template>
@@ -320,6 +319,7 @@ select {
   width: 25%;
 }
 
+/* Responsive Design */
 @media screen and (max-width: 1350px){
   .card-link {
     display: block;
@@ -336,6 +336,13 @@ select {
     display: block;
     text-decoration: none;
     width: 50%;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .hero {
+    margin-top: 50px;
+    height: 350px;
   }
 }
 

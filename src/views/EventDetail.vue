@@ -69,7 +69,7 @@ onMounted(() => {
           <ContactBlock class="contact"/>
         </aside>
       </div>
-      <h2>Localisation</h2>
+      <h2 id="localisation__title">Localisation</h2>
       <div class="localisation">
         <div class="lieu">
           <h3>{{ objet.nom?.libelleFr }}</h3>
@@ -91,9 +91,12 @@ onMounted(() => {
       <hr />
 
       <footer>
-      <div class="apidae">
+      <div class="apidae__desktop">
         <img src="../../src/assets/images/vign_apidae.jpeg" alt="Logo apidae" width="250px">
       </div>
+        <div class="apidae__mobile">
+          <img src="../../src/assets/images/vign_apidae.jpeg" alt="Logo apidae" width="150px">
+        </div>
         <div class="apidae-text">
           <p>Mis à jour le
             <span v-if="objet.gestion.dateExportModification">{{ convertDate(objet.gestion?.dateExportModification) }}</span>
@@ -250,5 +253,81 @@ footer {
   margin-left: 15px;
   font-size: 0.8em;
   font-style: italic;
+}
+
+/* Responsive design */
+@media screen and (max-width: 1225px) {
+  .title__container {
+  text-align: center;
+  }
+  .title {
+    justify-content: center;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .event {
+    margin-top: 90px;
+  }
+
+  .description__block {
+    flex-direction: column-reverse;
+    align-items: center;
+  }
+
+  aside,
+  .leftSide {
+    width: 90%;
+  }
+
+  #localisation__title {
+    margin-left: 55px;
+  }
+
+  .localisation {
+    margin-inline: 0;
+    margin: auto;
+    width: 90%;
+  }
+
+  .lieu {
+    padding-left: 55px;
+  }
+
+}
+
+@media screen and (max-width: 600px) {
+  .lieu {
+  padding-left: 45px;
+  }
+
+  h3 {
+    font-size: 1.7em;
+  }
+
+  footer {
+    justify-content: space-around;
+    margin-block: 10px;
+  }
+
+  .apidae__desktop {
+    display: none;
+  }
+
+  .apidae-text {
+    font-size: 0.6em;
+  }
+}
+
+@media screen and (min-width: 600px) {
+  .apidae__mobile {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .lieu {
+    padding-left: 30px;
+  }
 }
 </style>

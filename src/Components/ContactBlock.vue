@@ -19,7 +19,7 @@ const toggle = () => document.querySelector(".contact__phone__list").classList.t
 </script>
 
 <template>
-  <aside>
+  <div id="contact__element">
 
     <p v-for="n in objet.ouverture?.periodesOuvertures" class="isToday"><span v-if="compareDate(n.dateDebut, checkYear(n.dateFin, n.tousLesAns), objet.id)">Se déroule aujourd'hui</span></p>
     <h3>Contacts</h3>
@@ -77,11 +77,11 @@ const toggle = () => document.querySelector(".contact__phone__list").classList.t
         </li>
       </ul>
     </div>
-  </aside>
+  </div>
 </template>
 
 <style scoped>
-aside {
+#contact__element {
   position: relative;
   border: 1px solid grey;
   padding-inline: 20px;
