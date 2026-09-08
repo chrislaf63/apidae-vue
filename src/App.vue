@@ -61,8 +61,8 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll))
       </div>
     </div>
     <div ref="menuMobile" class="menu__mobile menu__mobile-hidden">
-      <div class="menu__mobile__part"><RouterLink to="/">Accueil Agenda</RouterLink></div>
-      <div class="menu__mobile__part"><a href="https://www.plainelimagne.com/">Accueil Plaine Limagne</a></div>
+      <RouterLink to="/"><div @click="menuMobileToggler" class="menu__mobile__part"><span>Accueil Agenda</span></div></RouterLink>
+      <a href="https://www.plainelimagne.com/"><div class="menu__mobile__part"><span>Accueil Plaine Limagne</span></div></a>
     </div>
   </header>
 
@@ -181,7 +181,7 @@ nav a {
   display: none;
 }
 
-.menu__mobile__part a {
+a .menu__mobile__part span {
   display: inline-block;
   text-decoration: none;
   margin-top: 15px;

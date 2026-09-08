@@ -30,7 +30,7 @@ onMounted(() => {
         <div class="title">
           <h1>{{ objet.nom?.libelleFr }}</h1>
         </div>
-        <p v-if="objet.localisation.adresse.nomDuLieu">{{ objet.localisation.adresse.nomDuLieu }}</p>
+        <p v-if="objet.localisation.adresse.nomDuLieu"><span>{{ objet.localisation.adresse.nomDuLieu }}</span></p>
         <p>
           <span v-if="objet.localisation.adresse.adresse1">{{ objet.localisation.adresse.adresse1 }}, </span>
           <span v-if="objet.localisation.adresse.adresse2">{{ objet.localisation.adresse.adresse2 }}&nbsp; </span>
@@ -61,12 +61,13 @@ onMounted(() => {
               <p>{{ objet.ouverture?.periodeEnClair?.libelleFr }}</p>
             </div>
           </div>
+         <ContactBlock class="contact__mobile" />
         </div>
         <aside>
           <div class="description__image">
             <img :src="`${objet.illustrations[0].traductionFichiers[0].urlDiaporama }`" alt="image d'illustration">
           </div>
-          <ContactBlock class="contact"/>
+          <ContactBlock class="contact__desktop"/>
         </aside>
       </div>
       <h2 id="localisation__title">Localisation</h2>
@@ -88,6 +89,7 @@ onMounted(() => {
             :label="objet.nom?.libelleFr"
         />
       </div>
+      <div id="spacing"></div>
       <hr />
 
       <footer>
@@ -244,6 +246,11 @@ aside {
   width: 370px;
 }
 
+#spacing {
+  display: none;
+  height: 20px;
+}
+
 footer {
   margin-block: 25px;
   display: flex;
@@ -280,6 +287,10 @@ footer {
     width: 90%;
   }
 
+  .contact__desktop {
+    display: none;
+  }
+
   #localisation__title {
     margin-left: 55px;
   }
@@ -294,6 +305,10 @@ footer {
     padding-left: 55px;
   }
 
+  #spacing {
+    display: block;
+  }
+
 }
 
 @media screen and (max-width: 600px) {
@@ -303,6 +318,10 @@ footer {
 
   h3 {
     font-size: 1.7em;
+  }
+
+  #localisation__title {
+    margin-left: 50px;
   }
 
   footer {
@@ -319,9 +338,38 @@ footer {
   }
 }
 
+@media screen and (min-width: 800px) {
+  .contact__mobile {
+    display: none;
+  }
+}
+
 @media screen and (min-width: 600px) {
   .apidae__mobile {
     display: none;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .title h1 {
+    font-size: 2em;
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .title__grid p > span,
+  .title__grid span,
+  .description__text p,
+  .tarifs p,
+  .horaires p,
+  .lieu p {
+    font-size: 0.8em;
+  }
+
+  .blockTarifs h2,
+  .blockHoraires h2,
+  #localisation__title {
+    font-size: 1.6em;
   }
 }
 

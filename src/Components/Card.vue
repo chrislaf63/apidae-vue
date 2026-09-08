@@ -35,7 +35,6 @@ const checkedDateFin = checkYear(dateFin, props.objet.ouverture.periodesOuvertur
       <p><i class="fa-solid fa-location-dot"></i><span>{{ commune }}</span></p>
     </div>
   </div>
-
 </template>
 
 <style scoped>
@@ -116,6 +115,18 @@ h3 {
   100% {
     opacity: 1;
     text-shadow: 0px 5px 5px rgba(0, 0, 0, 0);
+  }
+}
+
+/* Responsive design */
+@media screen and (max-width: 450px) {
+  .date {
+    font-size: 0.8em;
+  }
+
+  h3,
+  p {
+    font-size: 0.95em;
   }
 }
 </style>

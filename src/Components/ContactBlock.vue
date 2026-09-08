@@ -50,6 +50,7 @@ const toggle = () => document.querySelector(".contact__phone__list").classList.t
     </div>
     <div v-if="emails.length > 0"
          class="email__block">
+      <p id="email__title">Nous envoyer un message</p>
       <ul class="contact__block">
         <li v-for="mail in emails" :key="mail.identifiant">
           <div class="email">
@@ -64,7 +65,7 @@ const toggle = () => document.querySelector(".contact__phone__list").classList.t
     </div>
     <div v-if="websites.length > 0"
          class="website__block">
-      <p><i class="fa-solid fa-earth-europe"></i>&nbsp&nbsp&nbspSite<span v-if="websites > 1">s</span> web</p>
+      <p id="website__title"><i class="fa-solid fa-earth-europe"></i>&nbsp&nbsp&nbspSite<span v-if="websites > 1">s</span> web</p>
       <ul class="contact__block">
         <li v-for="website in websites" :key="website.identifiant">
           <div class="websites">
@@ -83,7 +84,7 @@ const toggle = () => document.querySelector(".contact__phone__list").classList.t
 <style scoped>
 #contact__element {
   position: relative;
-  border: 1px solid grey;
+  border-radius: 20px;
   padding-inline: 20px;
   padding-bottom: 20px;
   background-color: #ffffff;
@@ -91,6 +92,7 @@ const toggle = () => document.querySelector(".contact__phone__list").classList.t
 
 h3 {
   text-align: center;
+  margin-bottom: 20px;
 }
 
 a {
@@ -98,6 +100,7 @@ a {
 }
 
 .isToday {
+  padding-top: 15px;
   text-align: center;
   margin-block: 20px;
   font-size: 1.3em;
@@ -138,7 +141,7 @@ a {
 }
 
 .email__block {
-  margin-top: 40px;
+  margin-top: 25px;
 }
 
 .contact__block {
@@ -197,5 +200,14 @@ a {
 
 .website__block > p {
   text-align: center;
+}
+
+#email__title {
+  text-align: center;
+  margin-bottom: 10px;
+}
+#website__title {
+  margin-top: 20px;
+  margin-bottom: 10px;
 }
 </style>

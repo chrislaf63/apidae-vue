@@ -43,6 +43,7 @@ const sendCommune = (com) => searchCommune.value = com
     <div>
       <h1>Agenda des manifestations</h1>
     </div>
+    <span id="credit">Image Rachel Coyne sur Unsplash</span>
   </div>
   <div class="wrap">
 
@@ -151,6 +152,7 @@ const sendCommune = (com) => searchCommune.value = com
 }
 
 .hero {
+  position:relative;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -159,6 +161,13 @@ const sendCommune = (com) => searchCommune.value = com
   background-size: cover;
   background-position: 40% 60%;
   margin-top: 150px;
+}
+
+#credit {
+  position: absolute;
+  bottom: 5px;
+  right: 20px;
+  color: #ffffff;
 }
 
 h1 {
@@ -344,6 +353,10 @@ select {
     margin-top: 50px;
     height: 350px;
   }
+
+  #credit {
+    font-size: 0.8em;
+  }
 }
 
 @media screen and (min-width: 660px){
@@ -379,6 +392,14 @@ select {
 }
 
 @media screen and (max-width: 465px) {
+  h1 {
+    font-size: 1.7em;
+  }
+
+  #credit {
+    font-size: 0.7em;
+  }
+
   .controls {
     width:100%;
   }
@@ -389,6 +410,18 @@ select {
 
   .wrap {
     flex-direction: column;
+  }
+}
+
+@media screen and (max-width: 400px){
+  h1 {
+    font-size: 1.5em;
+  }
+}
+
+@media screen and (max-width: 355px){
+  h1 {
+    font-size: 1.3em;
   }
 }
 
