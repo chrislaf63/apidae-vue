@@ -1,6 +1,12 @@
 export const convertDate = (date) => {
     const newDate = new Date(date)
-    return newDate.toLocaleDateString("fr-FR", {weekday: "long", day: "numeric", month: "long", year:"numeric", timeZone: "UTC"})
+    return newDate.toLocaleDateString("fr-FR", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+        timeZone: "UTC"
+    })
 }
 
 export const period = (dateDebut, dateFin) => dateFin !== dateDebut
@@ -12,16 +18,16 @@ export const convertDatePeriodDebut = (date) => {
 
 export const convertDatePeriodDebutWithYear = (date) => {
     const newDatePeriod = new Date(date)
-    return newDatePeriod.toLocaleDateString("fr-FR", {day: "numeric", month: "long", year:"numeric", timeZone: "UTC"})
+    return newDatePeriod.toLocaleDateString("fr-FR", {day: "numeric", month: "long", year: "numeric", timeZone: "UTC"})
 }
 export const convertDatePeriodFin = (date) => {
     const newDatePeriod = new Date(date)
-    return newDatePeriod.toLocaleDateString("fr-FR", {day: "numeric", month: "long", year:"numeric", timeZone: "UTC"})
+    return newDatePeriod.toLocaleDateString("fr-FR", {day: "numeric", month: "long", year: "numeric", timeZone: "UTC"})
 }
 
 export const convertDayDate = () => {
     const todayDate = new Date()
-    return todayDate.toLocaleDateString("fr-FR", {day: "numeric", month: "long", year:"numeric", timeZone: "UTC"})
+    return todayDate.toLocaleDateString("fr-FR", {day: "numeric", month: "long", year: "numeric", timeZone: "UTC"})
 }
 
 export const checkYear = (dateFin, tousLesAns) => {
@@ -37,20 +43,31 @@ export const checkYear = (dateFin, tousLesAns) => {
     }
 }
 
-export const compareDate = (dateDebut, dateFin, identifiantObjet) => {
+export const compareDate = (objet, dateDebut, dateFin, identifiantObjet) => {
     const id = Number(identifiantObjet)
     const today = new Date()
     const debut = new Date(dateDebut)
-    const fin = new Date (dateFin)
-    const days = ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"]
-    const day = days[today.getDay()]
+    const fin = new Date(dateFin)
+    const days = ["dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"]
+    const day = days[today.getDay()].toLowerCase()
     const marketsId = [4925908, 4809324, 5492544]
     if (verifyMarketDay(id, day)) {
         return true
-    }
-    else return (!marketsId.includes(id)) && ((today.toDateString() === debut.toDateString() && today.toDateString() === fin.toDateString()) || (today >= debut && today <= fin));
+    } else return (!marketsId.includes(id)) && (!searchCloseDays(objet).includes(day)) && ((today.toDateString() === debut.toDateString() && today.toDateString() === fin.toDateString()) || (today >= debut && today <= fin));
 }
 
 export const verifyMarketDay = (id, day) => {
-    return ( day === "Vendredi" && id === 4925908 ) || (day === "Lundi" && id === 4809324 ) || ( day === "Mardi" && id === 5492544  );
+    return (day === "vendredi" && id === 4925908) || (day === "lundi" && id === 4809324) || (day === "mardi" && id === 5492544);
 }
+
+export const searchCloseDays = (open) => {
+    const closedDays = []
+    if (open.type === "OUVERTURE_SAUF") {
+        for (const day of open.ouverturesJournalieres) {
+            closedDays.push((day.jour).toLowerCase())
+        }
+    }
+    return closedDays
+}
+
+

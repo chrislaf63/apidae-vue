@@ -21,7 +21,10 @@ const toggle = () => document.querySelector(".contact__phone__list").classList.t
 <template>
   <div id="contact__element">
 
-    <p v-for="n in objet.ouverture?.periodesOuvertures" class="isToday"><span v-if="compareDate(n.dateDebut, checkYear(n.dateFin, n.tousLesAns), objet.id)">Se déroule aujourd'hui</span></p>
+    <span v-for="n in objet.ouverture?.periodesOuvertures" >
+      <span class="isToday" v-if="compareDate(n, n.dateDebut, checkYear(n.dateFin, n.tousLesAns), objet.id)">Se déroule aujourd'hui</span>
+      <span class="closed" v-else>Ne se déroule pas ce jour</span>
+    </span>
     <h3>Contacts</h3>
     <div v-if="phones.length > 0"
          class="phone__block">
@@ -100,12 +103,23 @@ a {
 }
 
 .isToday {
+  display: block;
   padding-top: 15px;
   text-align: center;
   margin-block: 20px;
   font-size: 1.3em;
   color: var(--ccpl-green-2)
 }
+
+.closed {
+    display: block;
+    padding-top: 15px;
+    text-align: center;
+    margin-block: 20px;
+    font-size: 1.3em;
+    color: darkred;
+  }
+
 
 .one__phone,
 .email,
