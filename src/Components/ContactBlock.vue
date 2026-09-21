@@ -16,15 +16,20 @@ const websites = computed(() => byType(205))
 
 const byType = (id) => objet.value?.informations?.moyensCommunication?.filter(m => m.type.id === id) ?? []
 const toggle = () => document.querySelector(".contact__phone__list").classList.toggle("hidden")
+
+const open = () => {
+  for (let n of objet.value.ouverture?.periodesOuvertures) {
+    if(compareDate(n, n.dateDebut, checkYear(n.dateFin, n.tousLesAns), objet.value.id)) return true
+  }
+  return false
+}
+
 </script>
 
 <template>
   <div id="contact__element">
-
-    <span v-for="n in objet.ouverture?.periodesOuvertures" >
-      <span class="isToday" v-if="compareDate(n, n.dateDebut, checkYear(n.dateFin, n.tousLesAns), objet.id)">Se déroule aujourd'hui</span>
+      <span class="isToday" v-if="open()">Se déroule aujourd'hui</span>
       <span class="closed" v-else>Ne se déroule pas ce jour</span>
-    </span>
     <h3>Contacts</h3>
     <div v-if="phones.length > 0"
          class="phone__block">

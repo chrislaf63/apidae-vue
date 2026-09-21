@@ -41,13 +41,23 @@ const checkedDateFin = checkYear(dateFin, props.objet.ouverture.periodesOuvertur
 
 <style scoped>
 .card {
-  border: 1px solid #5c6b6b;
-  height: 630px;
+  position: relative;
+  border-radius: 5px;
+  height: 600px;
   margin: 15px;
+  background-color: #FFFFFF;
+  box-shadow: 5px 7px 10px rgba(159,159,169,0.5);
+  transition: 0.3s;
+}
+
+.card:hover {
+  box-shadow: 5px 7px 12px rgba(159,159,169,0.8)
 }
 
 .illustration {
   overflow: hidden;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
 }
 
 .illustration img {
@@ -71,6 +81,7 @@ const checkedDateFin = checkYear(dateFin, props.objet.ouverture.periodesOuvertur
 
 .card-date {
   padding-block: 8px;
+  border-top: 1px solid rgba(92,107,107,0.2)
 }
 
 .date {
@@ -107,6 +118,10 @@ h3 {
 }
 
 .card__localisation {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
   padding-block: 5px;
   text-align: center;
   color: #17252a;

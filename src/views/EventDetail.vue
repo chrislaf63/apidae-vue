@@ -1,29 +1,30 @@
 <script setup>
-import {onMounted} from 'vue'
+import {onMounted, computed} from 'vue'
 import {useRoute} from 'vue-router'
 import {useApidaeStore} from "@/stores/apidae.js";
-import {computed} from 'vue'
 import ContactBlock from "@/Components/ContactBlock.vue";
 import EventMap from "@/Components/EventMap.vue";
 import {convertDate, period, convertDatePeriodDebut, convertDatePeriodFin} from '@/utils/date'
-
 
 const route = useRoute()
 const store = useApidaeStore()
 const objet = computed(() => store.getObjectById(route.params.id))
 
 onMounted(() => {
-  window.scrollTo(0, 0)
+  if (!objet.value && store.objets.length === 0) {
+    store.fetchObjets()
+  }
 })
 
 </script>
 
 <template>
-  <div class="event" v-if="objet">
+  <div v-if="store.loading">Chargement en cours...</div>
+  <div class="event" v-else-if="objet">
     <div class="title__container">
       <div class="title__grid">
         <span
-            v-if="period(objet.ouverture.periodesOuvertures[0].dateDebut, objet.ouverture.periodesOuvertures[0].dateFin)"
+            v-if="objet.ouverture?.periodesOuvertures?.[0] && period(objet.ouverture.periodesOuvertures[0].dateDebut, objet.ouverture.periodesOuvertures[0].dateFin)"
             class="date">Du {{ convertDatePeriodDebut(objet.ouverture.periodesOuvertures[0].dateDebut) }} au
           {{ convertDatePeriodFin(objet.ouverture.periodesOuvertures[0].dateFin) }}</span>
         <span v-else class="date">{{ convertDate(objet.prochaineDate) }}</span>
@@ -64,7 +65,7 @@ onMounted(() => {
          <ContactBlock class="contact__mobile" />
         </div>
         <aside>
-          <div class="description__image">
+          <div v-if="objet.illustrations?.[0]?.traductionFichiers?.[0]?.urlDiaporama" class="description__image">
             <img :src="`${objet.illustrations[0].traductionFichiers[0].urlDiaporama }`" alt="image d'illustration">
           </div>
           <ContactBlock class="contact__desktop"/>
