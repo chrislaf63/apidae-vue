@@ -81,10 +81,10 @@ export const toYMD = (date) => {
 
 export const formatPeriode = (dates) => {
     const [debut, fin] = dates
-    let motifDebut = "EEEE d MMMM yyyy"
+    let motifDebut = "EEEE d MMM yyyy"
     if (fin === null || isSameDay(fin, debut)) return `Le ${format(debut, motifDebut, {locale: fr})}`
-    if (isSameYear(fin, debut)) motifDebut = 'EEEE d MMMM'
+    if (isSameYear(fin, debut)) motifDebut = 'EEEE d MMM'
     if (isSameMonth(fin, debut)) motifDebut = 'EEEE d'
-    return `Du ${format(debut, motifDebut, { locale: fr })} au ${format(fin, 'EEEE d MMMM yyyy', { locale: fr })}`
+    return `Du ${format(debut, motifDebut, { locale: fr })} au ${format(fin, 'EEEE d MMM yyyy', { locale: fr })}`
 }
 
