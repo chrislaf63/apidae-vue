@@ -1,16 +1,35 @@
 <script setup>
-import {computed, onMounted} from 'vue'
+import {computed, onMounted, ref, watch} from 'vue'
 import {storeToRefs} from 'pinia'
 import {useApidaeStore} from '@/stores/apidae.js'
+import {toYMD, formatPeriode} from '@/utils/date.js'
+import {VueDatePicker} from '@vuepic/vue-datepicker'
+import {fr} from 'date-fns/locale'
+import '@vuepic/vue-datepicker/dist/main.css'
+import '@/assets/style/datepicker.css'
 
 import Card from "@/Components/Card.vue";
 
+const rangeDate = ref(null)
 const store = useApidaeStore()
 
 // storeToRefs garde la réactivité quand on "déstructure" le state/getters.
 // Les actions, elles, se prennent directement sur `store` (voir plus bas).
-const {filtered, numFound, loading, error, fromCache, search, from, to, searchCommune, objets} =
+const {filtered, numFound, loading, error, fromCache, search, searchCommune, objets} =
     storeToRefs(store)
+
+watch(rangeDate, (newVal) => {
+  if (newVal && newVal[0] && newVal[1]) {
+    store.from = toYMD(newVal[0])
+    store.to = toYMD(newVal[1])
+  } else if (newVal && newVal[0]) {
+    store.from = toYMD(newVal[0])
+    store.to = ''
+  } else {
+    store.from = ''
+    store.to = ''
+  }
+})
 
 onMounted(async () => {
   await store.fetchObjets()
@@ -19,10 +38,8 @@ onMounted(async () => {
 // petit helper : la commune peut manquer selon les fiches
 const commune = (o) => o.localisation?.adresse?.commune?.nom ?? '—'
 
-
-
-// computed : recalculé tout seul dès que `objets` est rempli par fetchObjets().
-// Renvoie [{ nom: 'Ambert', count: 3 }, …] trié par nom.
+// Computed : recalculé tout seul dès que `objets` est rempli par fetchObjets().
+// Renvoie [{ nom : 'Ambert', count : 3 }, …] trié par nom.
 const communes = computed(() => {
   const counted = objets.value.reduce((acc, o) => {
     const nom = o.localisation?.adresse?.commune?.nom
@@ -47,42 +64,38 @@ const sendCommune = (com) => searchCommune.value = com
   </div>
   <div class="wrap">
 
-    <!-- Colonne de filtres : 4 v-model branchés sur le store -->
+    <!-- Colonne de filtres : 3 v-model branchés sur le store -->
 
     <div class="controls">
       <div class="byDate">
-        <p>DU</p>
-        <input
-            v-model="from"
-            type="date"
-            placeholder="Du"
-            onfocus="(this.type='date')"
-            onblur="if(!this.value)this.type='text'"
-        /><br>
-
-        <p>AU</p>
-        <input
-            v-model="to"
-            type="text"
-            placeholder="Au"
-            onfocus="(this.type='date')"
-            onblur="if(!this.value)this.type='text'"
-        />
+        <p>DU ~ AU</p>
+        <div class="datePicker">
+          <VueDatePicker
+              v-model="rangeDate"
+              range
+              multi-calendars
+              :time-config="{ enableTimePicker: false }"
+              :locale="fr"
+              :formats="{ input: formatPeriode, preview: 'dd/MM/yyy' }"
+              :action-row="{ selectBtnLabel: 'Choisir', cancelBtnLabel: 'Abandon'}"
+              :min-date="new Date()"
+              :config="{ monthChangeOnScroll: false }"
+              placeholder="Choisir une période"
+          />
+        </div>
       </div>
       <hr/>
       <div class="byTown">
         <p>Par commune</p>
-
         <select v-model="searchCommune">
           <option value="" selected>Toutes ({{ numFound }})</option>
           <option v-for="c in communes"
                   :key="c.nom"
-                  @click="sendCommune(c.nom)">{{ c.nom }} ({{ c.count }})</option>
+                  @click="sendCommune(c.nom)">{{ c.nom }} ({{ c.count }})
+          </option>
         </select>
       </div>
-
       <hr/>
-
       <div class="byEventType">
         <p>Par type d'évènement</p>
         <input
@@ -92,13 +105,7 @@ const sendCommune = (com) => searchCommune.value = com
             aria-label="Rechercher un nom"
         />
       </div>
-
-      <!-- <span class="count">
-        {{ filtered.length }} affiché{{ filtered.length > 1 ? 's' : '' }}
-        <template v-if="numFound"> / {{ numFound }}</template>
-      </span> -->
     </div>
-
 
     <!-- États : erreur, chargement, vide, données -->
     <p v-if="error" class="state error">Impossible de charger les données : {{ error }}</p>
@@ -119,7 +126,6 @@ const sendCommune = (com) => searchCommune.value = com
         <button class="refresh__mobile" :disabled="loading" @click="store.fetchObjets(true)">
           <i class="fa-solid fa-arrow-rotate-right"></i>
         </button>
-
       </header>
 
       <!-- Affichage carte évènement -->
@@ -152,7 +158,7 @@ const sendCommune = (com) => searchCommune.value = com
 }
 
 .hero {
-  position:relative;
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -242,6 +248,11 @@ select {
   border-radius: 8px;
 }
 
+.datePicker {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
 .controls input,
 select {
   flex: 1 1 240px;
@@ -272,13 +283,14 @@ select {
 }
 
 .byTown p,
-.byEventType p{
+.byEventType p {
   font-size: 1.2em;
 }
 
 .byTown input,
 .byDate input,
 .byEventType input,
+.datePicker,
 select {
   width: 90%;
   margin-left: 5%;
@@ -293,12 +305,6 @@ select {
 
 .events-containers {
   width: 75%;
-}
-
-.count {
-  color: var(--muted);
-  font-size: 0.85rem;
-  margin-left: auto;
 }
 
 .state {
@@ -329,7 +335,7 @@ select {
 }
 
 /* Responsive Design */
-@media screen and (max-width: 1350px){
+@media screen and (max-width: 1350px) {
   .card-link {
     display: block;
     text-decoration: none;
@@ -337,10 +343,11 @@ select {
   }
 }
 
-@media screen and (max-width: 950px){
+@media screen and (max-width: 950px) {
   h1 {
-    font-size:2em
+    font-size: 2em
   }
+
   .card-link {
     display: block;
     text-decoration: none;
@@ -359,17 +366,17 @@ select {
   }
 }
 
-@media screen and (min-width: 660px){
+@media screen and (min-width: 660px) {
   .refresh__mobile {
-    display:none
+    display: none
   }
 
   .refresh__desktop {
-    display:inline-block;
+    display: inline-block;
   }
 }
 
-@media screen and (max-width: 660px){
+@media screen and (max-width: 660px) {
   .refresh__desktop {
     display: none;
   }
@@ -379,9 +386,9 @@ select {
   }
 }
 
-@media screen and (max-width: 650px){
+@media screen and (max-width: 650px) {
   .controls {
-    width:50%;
+    width: 50%;
   }
 
   .card-link {
@@ -401,7 +408,7 @@ select {
   }
 
   .controls {
-    width:100%;
+    width: 100%;
   }
 
   .events-containers {
@@ -413,13 +420,13 @@ select {
   }
 }
 
-@media screen and (max-width: 400px){
+@media screen and (max-width: 400px) {
   h1 {
     font-size: 1.5em;
   }
 }
 
-@media screen and (max-width: 355px){
+@media screen and (max-width: 355px) {
   h1 {
     font-size: 1.3em;
   }

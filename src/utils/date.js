@@ -1,3 +1,6 @@
+import { format, isSameYear, isSameMonth, isSameDay } from 'date-fns'
+import { fr } from 'date-fns/locale'
+
 export const convertDate = (date) => {
     const newDate = new Date(date)
     return newDate.toLocaleDateString("fr-FR", {
@@ -36,8 +39,7 @@ export const checkYear = (dateFin, tousLesAns) => {
     const dateFinYear = dateFin.slice(0, 4)
     if (thisYear > dateFinYear && tousLesAns) {
         const newDateFin = dateFin.slice(4)
-        const finalDateFin = thisYear.concat(newDateFin)
-        return finalDateFin
+        return thisYear.concat(newDateFin)
     } else {
         return dateFin
     }
@@ -70,4 +72,19 @@ export const searchCloseDays = (open) => {
     return closedDays
 }
 
+export const toYMD = (date) => {
+    const y = date.getFullYear()
+    const m = String(date.getMonth() + 1).padStart(2, '0')
+    const d = String(date.getDate()).padStart(2, '0')
+    return `${y}-${m}-${d}`
+}
+
+export const formatPeriode = (dates) => {
+    const [debut, fin] = dates
+    let motifDebut = "EEEE d MMMM yyyy"
+    if (fin === null || isSameDay(fin, debut)) return `Le ${format(debut, motifDebut, {locale: fr})}`
+    if (isSameYear(fin, debut)) motifDebut = 'EEEE d MMMM'
+    if (isSameMonth(fin, debut)) motifDebut = 'EEEE d'
+    return `Du ${format(debut, motifDebut, { locale: fr })} au ${format(fin, 'EEEE d MMMM yyyy', { locale: fr })}`
+}
 
