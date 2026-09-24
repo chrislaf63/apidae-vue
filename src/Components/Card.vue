@@ -114,7 +114,7 @@ h3 {
 }
 
 .card:hover .card__description h3 {
-  animation: titleblur 0.7s;
+  animation: titleblur 0.4s ease-in;
 }
 
 .card__localisation {
